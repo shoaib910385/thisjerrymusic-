@@ -3,9 +3,12 @@ from pyrogram import filters
 from pyrogram.enums import ChatAction
 from groq import Groq
 from os import getenv
+import re
 
 # ─── CONFIG ──────────────────────────────────────────
 BOT_USERNAME = getenv("BOT_USERNAME", "").lower()
+BOT_NAME = "sivix"  # name trigger (lowercase)
+
 groq = Groq(api_key=getenv("GROQ_API_KEY"))
 
 BLOCKED_COMMANDS = (
@@ -14,13 +17,16 @@ BLOCKED_COMMANDS = (
     "/afk", "/ping", "/start", "/help"
 )
 
+# ─── PERSONALITY (HINGLISH) ──────────────────────────
 SYSTEM_PROMPT = """
 Your name is Sivix.
-You are a human-like bestfriend.
-You talk casually with emotions and emojis 😄✨
-You are funny, caring, sometimes playful.
-Never say you are an AI.
-Keep replies short, natural and friendly.
+You talk in Hinglish (Hindi + English mix).
+You are a caring, funny, human-like bestfriend.
+Use emojis naturally 😄✨
+Sometimes tease, sometimes support.
+Talk casually like real Indian friends.
+Never say you are an AI or bot.
+Replies should feel real, short, and friendly.
 No images, text only.
 """
 
@@ -33,6 +39,17 @@ def add_memory(uid, role, text):
     )
     USER_MEMORY[uid] = USER_MEMORY[uid][-6:]
 
+# ─── TRIGGER HELPERS ─────────────────────────────────
+def name_trigger(text: str) -> bool:
+    """
+    Triggers if message starts with or contains bot name
+    Examples:
+    'sivix hi'
+    'hey sivix'
+    """
+    text = text.lower()
+    return bool(re.search(rf"\b{BOT_NAME}\b", text))
+
 # ─── CHAT HANDLER ────────────────────────────────────
 @app.on_message(filters.text)
 async def sivix_chat(bot, message):
@@ -41,30 +58,40 @@ async def sivix_chat(bot, message):
 
     text = message.text.strip()
 
-    # Ignore commands safely
+    # Ignore commands
     if text.startswith(BLOCKED_COMMANDS):
         return
 
     # ─── TRIGGER LOGIC ───
     if message.chat.type == "private":
         triggered = True
+
     else:
         mentioned = f"@{BOT_USERNAME}" in text.lower()
+
         replied = (
             message.reply_to_message
             and message.reply_to_message.from_user
             and message.reply_to_message.from_user.is_bot
         )
-        triggered = mentioned or replied
+
+        name_called = name_trigger(text)
+
+        triggered = mentioned or replied or name_called
 
     if not triggered:
         return
 
-    # Clean mention text
-    clean_text = text.replace(f"@{BOT_USERNAME}", "").strip()
+    # Clean message text
+    clean_text = (
+        text.replace(f"@{BOT_USERNAME}", "")
+            .replace(BOT_NAME, "")
+            .strip()
+    )
+
     user_id = message.from_user.id
 
-    add_memory(user_id, "user", clean_text)
+    add_memory(user_id, "user", clean_text or "Hi")
 
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     messages.extend(USER_MEMORY[user_id])
@@ -76,7 +103,7 @@ async def sivix_chat(bot, message):
             model="llama-3.3-70b-versatile",
             messages=messages,
             temperature=0.9,
-            max_tokens=200
+            max_tokens=220
         )
 
         reply = response.choices[0].message.content.strip()
@@ -85,4 +112,6 @@ async def sivix_chat(bot, message):
         await message.reply_text(reply)
 
     except Exception:
-        await message.reply_text("😅 Oops… thoda lag ho gaya, phir bolo na!")
+        await message.reply_text(
+            "😅 Arre wait yaar… thoda busy ho gayi thi, phir bolo na!"
+        )
