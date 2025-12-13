@@ -28,9 +28,9 @@ from config import BANNED_USERS
 from strings import get_string
 
 YUMI_PICS = [
-"https://files.catbox.moe/wifnjm.jpg",
-"https://files.catbox.moe/zp7b9k.jpg",
-"https://files.catbox.moe/qd4pv8.jpg",  
+"https://files.catbox.moe/avbpg8.jpg",
+"https://files.catbox.moe/avbpg8.jpg",
+"https://files.catbox.moe/avbpg8.jpg",  
 
 ]
 
@@ -69,11 +69,9 @@ async def start_pm(client, message: Message, _):
     await asyncio.sleep(0.1)
     await loading_1.edit_text("<b>sᴛᴧʀᴛɪηɢ......❤️‍🔥</b>")
     await asyncio.sleep(0.1)
-    await loading_1.edit_text("<b>ᴛιᴅᴀʟ</b>")
+    await loading_1.edit_text("ꜱɪᴠɪx<b></b>")
     await asyncio.sleep(0.1)
-    await loading_1.edit_text("<b>ᴛιᴅᴀʟ ꭙ</b>")
-    await asyncio.sleep(0.1)
-    await loading_1.edit_text("<b>ᴛιᴅᴀʟ ꭙ ϻᴜsɪᴄ ♪</b>")
+    await loading_1.edit_text("<b>ꜱɪᴠɪx ϻᴜsɪᴄ ♪</b>")
     await asyncio.sleep(0.1)
     await loading_1.edit_text("<b>sᴛᴧʀᴛed!🥀</b>")
     await asyncio.sleep(0.1)
