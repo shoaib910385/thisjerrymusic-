@@ -34,14 +34,14 @@ def add_memory(uid, role, text):
     USER_MEMORY[uid] = USER_MEMORY[uid][-6:]
 
 # ─── CHAT HANDLER ────────────────────────────────────
-@app.on_message(filters.text & ~filters.command)
-async def shivani_chat(bot, message):
+@app.on_message(filters.text)
+async def sivix_chat(bot, message):
     if not message.from_user:
         return
 
     text = message.text.strip()
 
-    # Ignore music/system commands
+    # Ignore commands safely
     if text.startswith(BLOCKED_COMMANDS):
         return
 
@@ -60,7 +60,7 @@ async def shivani_chat(bot, message):
     if not triggered:
         return
 
-    # Clean mention
+    # Clean mention text
     clean_text = text.replace(f"@{BOT_USERNAME}", "").strip()
     user_id = message.from_user.id
 
@@ -84,5 +84,5 @@ async def shivani_chat(bot, message):
 
         await message.reply_text(reply)
 
-    except Exception as e:
+    except Exception:
         await message.reply_text("😅 Oops… thoda lag ho gaya, phir bolo na!")
