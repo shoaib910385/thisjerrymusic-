@@ -13,7 +13,7 @@ Jᴀᴀ ʜᴀɪ ᴘᴀᴅʜᴀɪ ᴋʀ Jᴀᴀᴋᴇ ᴀᴀʏᴀ ʙᴀᴅᴀ ʀ�
 ➥ᴄᴘᴜ ʟᴏᴀᴅ: 𝟷𝟷.𝟸%
 ➥ʀᴀᴍ ᴄᴏɴsᴜᴍᴘᴛɪᴏɴ: 𝟷𝟽.𝟻%||</pre>
 •──────────────────•
-ᴘᴏᴡєʀєᴅ ʙʏ»|| [- 𝛅ⴕ᧘ᥧ𝚱𝛜Ʀ ⌯](https://t.me/hehe_stalker)||
+ᴘᴏᴡєʀєᴅ ʙʏ»|| [- Акшай ⌯](https://t.me/rarest1)||
 •──────────────────•
 """
 
@@ -21,17 +21,13 @@ Jᴀᴀ ʜᴀɪ ᴘᴀᴅʜᴀɪ ᴋʀ Jᴀᴀᴋᴇ ᴀᴀʏᴀ ʙᴀᴅᴀ ʀ�
 async def start(_, msg):
     buttons = [
         [
-            InlineKeyboardButton(text=" ˹ηєᴛᴡᴏʀᴋ˼ ", url="https://t.me/thedrxnet",),
-            InlineKeyboardButton(text=" ˹ϻʏ ʜᴏϻє˼ ", url="https://t.me/drx_supportchat",),
+            InlineKeyboardButton(text=" ˹ηєᴛᴡᴏʀᴋ˼ ", url="https://t.me/SivixUpdates",),
+            InlineKeyboardButton(text=" ˹ϻʏ ʜᴏϻє˼ ", url="https://t.me/Sivixsupportgc",),
         ],
         
-     [
-            InlineKeyboardButton("˹ᴘʀιᴠᴧᴄʏ˼", url=f"https://telegra.ph/Privacy-Policy-08-03-101"),
-            InlineKeyboardButton("˹ᴛιᴅᴧʟ ᴛᴜηєs˼♪", url=f"http://t.me/TidalXMusicBot/tidaltunes"),
-        ],
         
           [
-            InlineKeyboardButton("˹ ϻʏ ϻᴧsᴛєʀ ˼ 👑", url="https://t.me/hehe_stalker"),
+            InlineKeyboardButton("˹ ϻʏ ϻᴧsᴛєʀ ˼ 👑", url="https://t.me/rarest1"),
           ]]
     
     reply_markup = InlineKeyboardMarkup(buttons)
