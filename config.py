@@ -13,7 +13,7 @@ BOT_TOKEN = getenv("BOT_TOKEN")
 
 # Bot and owner info
 OWNER_USERNAME = getenv("OWNER_USERNAME", "HEHE_STALKER")
-BOT_USERNAME = getenv("BOT_USERNAME", "tidalxmusicbot")
+BOT_USERNAME = getenv("BOT_USERNAME", "Sivixmusicbot")
 BOT_NAME = getenv("BOT_NAME", "TIDAL")
 ASSUSERNAME = getenv("ASSUSERNAME", "THEDRXNET")
 
@@ -37,7 +37,7 @@ HEROKU_APP_NAME = getenv("HEROKU_APP_NAME")
 HEROKU_API_KEY = getenv("HEROKU_API_KEY")
 
 # Git
-UPSTREAM_REPO = getenv("UPSTREAM_REPO", "https://github.com/shoaib910385/MyTidalMusic")
+UPSTREAM_REPO = getenv("UPSTREAM_REPO", "https://github.com/shoaib910385/thisjerrymusic")
 UPSTREAM_BRANCH = getenv("UPSTREAM_BRANCH", "main")
 GIT_TOKEN = getenv("GIT_TOKEN", None)
 
