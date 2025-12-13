@@ -42,8 +42,8 @@ UPSTREAM_BRANCH = getenv("UPSTREAM_BRANCH", "main")
 GIT_TOKEN = getenv("GIT_TOKEN", None)
 
 # Support
-SUPPORT_CHANNEL = getenv("SUPPORT_CHANNEL", "https://t.me/thedrxnet")
-SUPPORT_CHAT = getenv("SUPPORT_CHAT", "https://t.me/drx_supportchat")
+SUPPORT_CHANNEL = getenv("SUPPORT_CHANNEL", "https://t.me/SivixUpdates")
+SUPPORT_CHAT = getenv("SUPPORT_CHAT", "https://t.me/Sivixsupportgc")
 
 # Assistant settings
 AUTO_LEAVING_ASSISTANT = getenv("AUTO_LEAVING_ASSISTANT", "True")
@@ -85,10 +85,10 @@ autoclean = []
 confirmer = {}
 
 # Image URLs
-START_IMG_URL = getenv("START_IMG_URL", "https://files.catbox.moe/wifnjm.jpg")
-PING_IMG_URL = getenv("PING_IMG_URL", "https://files.catbox.moe/wifnjm.jpg")
-PLAYLIST_IMG_URL = "https://telegra.ph/file/d723f4c80da157fca1678.jpg"
-STATS_IMG_URL = "https://files.catbox.moe/wifnjm.jpg"
+START_IMG_URL = getenv("START_IMG_URL", "https://files.catbox.moe/avbpg8.jpg)
+PING_IMG_URL = getenv("PING_IMG_URL", "https://files.catbox.moe/avbpg8.jpg")
+PLAYLIST_IMG_URL = "https://files.catbox.moe/avbpg8.jpg"
+STATS_IMG_URL = "https://files.catbox.moe/avbpg8.jpg"
 TELEGRAM_AUDIO_URL = "https://files.catbox.moe/2vq8oz.jpg"
 TELEGRAM_VIDEO_URL = "https://files.catbox.moe/2vq8oz.jpg"
 STREAM_IMG_URL = "https://files.catbox.moe/2vq8oz.jpg"
