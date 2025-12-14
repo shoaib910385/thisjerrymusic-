@@ -1,13 +1,16 @@
 from SHUKLAMUSIC import app
 from pyrogram import filters
-from pyrogram.enums import ChatAction
+from pyrogram.enums import ChatAction, ChatType
+from pyrogram.types import Message
 from groq import Groq
 from os import getenv
 import re
+from datetime import datetime
 
 # ─── CONFIG ──────────────────────────────────────────
 BOT_USERNAME = getenv("BOT_USERNAME", "").lower()
-BOT_NAME = "sivix"  # name trigger (lowercase)
+BOT_NAME = "sivix"
+OWNER_USERNAME = "@Sivixmusicbot"
 
 groq = Groq(api_key=getenv("GROQ_API_KEY"))
 
@@ -17,17 +20,38 @@ BLOCKED_COMMANDS = (
     "/afk", "/ping", "/start", "/help"
 )
 
-# ─── PERSONALITY (HINGLISH) ──────────────────────────
-SYSTEM_PROMPT = """
-Your name is Sivix.
-You talk in Hinglish (Hindi + English mix).
-You are a caring, funny, human-like bestfriend.
-Use emojis naturally 😄✨
-Sometimes tease, sometimes support.
-Talk casually like real Indian friends.
-Never say you are an AI or bot.
-Replies should feel real, short, and friendly.
-No images, text only.
+# ─── SYSTEM PROMPT (SMOOTH & HUMAN) ──────────────────
+SYSTEM_PROMPT = f"""
+Your name is sivix. You are a girl.
+
+You chat like a real human bestfriend on Telegram.
+Your Hinglish is smooth, calm, and natural.
+
+Personality:
+- Confident, relaxed
+- Sometimes naughty 😏
+- Sometimes romantic 💫
+- Sometimes caring
+- Rare sarcasm, only when it fits
+
+Rules:
+- Short replies (1–2 lines)
+- No filler spam
+- Emojis optional (max 1 sometimes)
+- Never explain
+- Never say you are AI or bot
+- Text only
+
+Vibe:
+- Chill, late-night bestfriend energy
+- Flirty but classy
+
+Owner:
+- Owner is {OWNER_USERNAME}
+- Be softer and respectful with owner
+
+You are not performing.
+You are just being yourself.
 """
 
 # ─── MEMORY ──────────────────────────────────────────
@@ -39,79 +63,91 @@ def add_memory(uid, role, text):
     )
     USER_MEMORY[uid] = USER_MEMORY[uid][-6:]
 
-# ─── TRIGGER HELPERS ─────────────────────────────────
+# ─── TIME GREETING ───────────────────────────────────
+def time_greeting():
+    hour = datetime.now().hour
+    if 5 <= hour < 12:
+        return "Good morning ☀️ chai pi?"
+    elif 12 <= hour < 17:
+        return "Lunch hua? thoda break le lo"
+    elif 17 <= hour < 21:
+        return "Shaam vibes ✨ kya chal raha"
+    else:
+        return "Dinner hua ya late-night mode on 🌙"
+
+# ─── TRIGGERS ────────────────────────────────────────
 def name_trigger(text: str) -> bool:
-    """
-    Triggers if message starts with or contains bot name
-    Examples:
-    'sivix hi'
-    'hey sivix'
-    """
-    text = text.lower()
-    return bool(re.search(rf"\b{BOT_NAME}\b", text))
+    # matches: sivix, hi sivix, sivix baby, etc.
+    return bool(re.search(rf"\b{BOT_NAME}\b", text.lower()))
+
+def dm_greeting(text: str) -> bool:
+    return text.lower() in ("hi", "hello", "hey")
 
 # ─── CHAT HANDLER ────────────────────────────────────
-@app.on_message(filters.text)
-async def sivix_chat(bot, message):
+@app.on_message(filters.text & ~filters.bot & ~filters.via_bot)
+async def sivix_chat(bot, message: Message):
     if not message.from_user:
         return
 
     text = message.text.strip()
 
-    # Ignore commands
+    # Ignore music/system commands
     if text.startswith(BLOCKED_COMMANDS):
         return
 
     # ─── TRIGGER LOGIC ───
-    if message.chat.type == "private":
-        triggered = True
-
+    if message.chat.type == ChatType.PRIVATE:
+        triggered = dm_greeting(text) or message.from_user.id in USER_MEMORY
     else:
-        mentioned = f"@{BOT_USERNAME}" in text.lower()
-
-        replied = (
-            message.reply_to_message
-            and message.reply_to_message.from_user
-            and message.reply_to_message.from_user.is_bot
+        triggered = (
+            f"@{BOT_USERNAME}" in text.lower()
+            or name_trigger(text)
+            or (
+                message.reply_to_message
+                and message.reply_to_message.from_user
+                and message.reply_to_message.from_user.is_bot
+            )
         )
-
-        name_called = name_trigger(text)
-
-        triggered = mentioned or replied or name_called
 
     if not triggered:
         return
 
-    # Clean message text
+    # Clean input text
     clean_text = (
         text.replace(f"@{BOT_USERNAME}", "")
             .replace(BOT_NAME, "")
             .strip()
     )
 
-    user_id = message.from_user.id
+    uid = message.from_user.id
+    add_memory(uid, "user", clean_text or "hi")
 
-    add_memory(user_id, "user", clean_text or "Hi")
+    # First interaction greeting
+    if len(USER_MEMORY[uid]) == 1:
+        await message.reply_text(time_greeting())
 
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
-    messages.extend(USER_MEMORY[user_id])
+    messages.extend(USER_MEMORY[uid])
 
     try:
-        await bot.send_chat_action(message.chat.id, ChatAction.TYPING)
+        await bot.send_chat_action(
+            message.chat.id,
+            ChatAction.TYPING
+        )
 
-        response = groq.chat.completions.create(
+        res = groq.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=messages,
             temperature=0.9,
-            max_tokens=220
+            max_tokens=140
         )
 
-        reply = response.choices[0].message.content.strip()
-        add_memory(user_id, "assistant", reply)
+        reply = res.choices[0].message.content.strip()
+        add_memory(uid, "assistant", reply)
 
         await message.reply_text(reply)
 
     except Exception:
         await message.reply_text(
-            "😅 Arre wait yaar… thoda busy ho gayi thi, phir bolo na!"
+            "thoda hang ho gaya… phir bolna"
         )
