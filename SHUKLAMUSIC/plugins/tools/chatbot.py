@@ -77,13 +77,19 @@ def time_greeting():
 
 # ─── TRIGGERS ────────────────────────────────────────
 def name_trigger(text: str) -> bool:
+    # matches: sivix, hi sivix, sivix baby, etc.
     return bool(re.search(rf"\b{BOT_NAME}\b", text.lower()))
 
 def dm_greeting(text: str) -> bool:
     return text.lower() in ("hi", "hello", "hey")
 
-# ─── CHAT HANDLER (SAFE & NON-BLOCKING) ──────────────
-@app.on_message(filters.text & ~filters.command & ~filters.bot & ~filters.via_bot)
+# ─── CHAT HANDLER (SAFE, NON-BLOCKING) ───────────────
+@app.on_message(
+    filters.text
+    & ~filters.regex(r"^/")     # ⬅️ blocks ALL commands safely
+    & ~filters.bot
+    & ~filters.via_bot
+)
 async def sivix_chat(bot, message: Message):
     if not message.from_user:
         return
