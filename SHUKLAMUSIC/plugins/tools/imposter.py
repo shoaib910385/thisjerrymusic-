@@ -38,7 +38,7 @@ ROY = [
 
 @app.on_message(filters.group & ~filters.bot & ~filters.via_bot, group=69)
 async def chk_usr(_, message: Message):
-    if message.senderq_chat or not await check_pretender(message.chat.id):
+    if message.sender_chat or not await check_pretender(message.chat.id):
         return
     if not await usr_data(message.from_user.id):
         return await add_userdata(
