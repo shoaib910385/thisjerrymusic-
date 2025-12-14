@@ -11,7 +11,7 @@ groq = Groq(api_key=getenv("GROQ_API_KEY"))
 BLOCKED_COMMANDS = (
     "/play", "/vplay", "/cplay", "/seek", "/seekback",
     "/pause", "/resume", "/skip", "/end", "/stop",
-    "/afk", "/ping", "/start", "/help"
+    "/afk", "/ping", "/start", "/help", "/stid","/stickerid","/q","/knag","/imposter"
 )
 
 SYSTEM_PROMPT = """
