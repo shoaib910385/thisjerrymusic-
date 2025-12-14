@@ -20,9 +20,9 @@ BLOCKED_COMMANDS = (
     "/afk", "/ping", "/start", "/help"
 )
 
-# ─── SYSTEM PROMPT (SMOOTH & HUMAN) ──────────────────
+# ─── SYSTEM PROMPT ───────────────────────────────────
 SYSTEM_PROMPT = f"""
-Your name is sivix. You are a girl.
+Your name is Sivix. You are a girl.
 
 You chat like a real human bestfriend on Telegram.
 Your Hinglish is smooth, calm, and natural.
@@ -77,23 +77,18 @@ def time_greeting():
 
 # ─── TRIGGERS ────────────────────────────────────────
 def name_trigger(text: str) -> bool:
-    # matches: sivix, hi sivix, sivix baby, etc.
     return bool(re.search(rf"\b{BOT_NAME}\b", text.lower()))
 
 def dm_greeting(text: str) -> bool:
     return text.lower() in ("hi", "hello", "hey")
 
-# ─── CHAT HANDLER ────────────────────────────────────
-@app.on_message(filters.text & ~filters.bot & ~filters.via_bot)
+# ─── CHAT HANDLER (SAFE & NON-BLOCKING) ──────────────
+@app.on_message(filters.text & ~filters.command & ~filters.bot & ~filters.via_bot)
 async def sivix_chat(bot, message: Message):
     if not message.from_user:
         return
 
     text = message.text.strip()
-
-    # Ignore music/system commands
-    if text.startswith(BLOCKED_COMMANDS):
-        return
 
     # ─── TRIGGER LOGIC ───
     if message.chat.type == ChatType.PRIVATE:
@@ -112,7 +107,6 @@ async def sivix_chat(bot, message: Message):
     if not triggered:
         return
 
-    # Clean input text
     clean_text = (
         text.replace(f"@{BOT_USERNAME}", "")
             .replace(BOT_NAME, "")
