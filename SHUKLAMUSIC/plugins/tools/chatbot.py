@@ -6,6 +6,7 @@ from groq import Groq
 from os import getenv
 import re
 from datetime import datetime
+import random
 
 # ─── CONFIG ──────────────────────────────────────────
 BOT_USERNAME = getenv("BOT_USERNAME", "").lower()
@@ -14,11 +15,14 @@ OWNER_USERNAME = "@Sivixmusicbot"
 
 groq = Groq(api_key=getenv("GROQ_API_KEY"))
 
-BLOCKED_COMMANDS = (
-    "/play", "/vplay", "/cplay", "/seek", "/seekback",
-    "/pause", "/resume", "/skip", "/end", "/stop",
-    "/afk", "/ping", "/start", "/help"
-)
+# ─── STICKERS ────────────────────────────────────────
+SIVIX_STICKERS = [
+    "CAACAgQAAyEFAATMbo3sAAIBsmk-tB1YDLuGhIGwK0tJPhBiMDadAALfHgACr9A4UJgfHnynTzJfHgQ",
+    "CAACAgUAAyEFAATMbo3sAAIBsWk-tCVmEMVZP5oKe8X17kb4MBXcAAJADgACo-rhVHpLwcYW0kBSHgQ",
+    "CAACAgUAAyEFAATMbo3sAAIBsGk-tCvX9sSoUy6Qhfjt2XjdcPl1AALXBQACqfBIV7itGNxzQYFfHgQ",
+    "CAACAgUAAyEFAATMbo3sAAIBr2k-tDRFK1B7YolnG0_evEIuXapjAALdBAACRscpVd-2ZY4nX5iaHgQ",
+    "CAACAgUAAyEFAATMbo3sAAIBq2k-tDv3MLT3PWtqgMFLlysAAZAe2QACbhUAAhbteVTbn-jmI4mcSR4E",
+]
 
 # ─── SYSTEM PROMPT ───────────────────────────────────
 SYSTEM_PROMPT = f"""
@@ -77,16 +81,41 @@ def time_greeting():
 
 # ─── TRIGGERS ────────────────────────────────────────
 def name_trigger(text: str) -> bool:
-    # matches: sivix, hi sivix, sivix baby, etc.
     return bool(re.search(rf"\b{BOT_NAME}\b", text.lower()))
 
 def dm_greeting(text: str) -> bool:
     return text.lower() in ("hi", "hello", "hey")
 
-# ─── CHAT HANDLER (SAFE, NON-BLOCKING) ───────────────
+def group_trigger(message: Message) -> bool:
+    text = (message.text or "").lower()
+    return (
+        f"@{BOT_USERNAME}" in text
+        or name_trigger(text)
+        or (
+            message.reply_to_message
+            and message.reply_to_message.from_user
+            and message.reply_to_message.from_user.is_bot
+        )
+    )
+
+# ─── STICKER HANDLER ─────────────────────────────────
+@app.on_message(
+    filters.sticker
+    & ~filters.bot
+    & ~filters.via_bot
+)
+async def sivix_sticker_reply(bot, message: Message):
+    if message.chat.type != ChatType.PRIVATE:
+        if not group_trigger(message):
+            return
+
+    sticker = random.choice(SIVIX_STICKERS)
+    await message.reply_sticker(sticker)
+
+# ─── TEXT CHAT HANDLER ───────────────────────────────
 @app.on_message(
     filters.text
-    & ~filters.regex(r"^/")     # ⬅️ blocks ALL commands safely
+    & ~filters.regex(r"^/")
     & ~filters.bot
     & ~filters.via_bot
 )
@@ -100,15 +129,7 @@ async def sivix_chat(bot, message: Message):
     if message.chat.type == ChatType.PRIVATE:
         triggered = dm_greeting(text) or message.from_user.id in USER_MEMORY
     else:
-        triggered = (
-            f"@{BOT_USERNAME}" in text.lower()
-            or name_trigger(text)
-            or (
-                message.reply_to_message
-                and message.reply_to_message.from_user
-                and message.reply_to_message.from_user.is_bot
-            )
-        )
+        triggered = group_trigger(message)
 
     if not triggered:
         return
@@ -122,7 +143,6 @@ async def sivix_chat(bot, message: Message):
     uid = message.from_user.id
     add_memory(uid, "user", clean_text or "hi")
 
-    # First interaction greeting
     if len(USER_MEMORY[uid]) == 1:
         await message.reply_text(time_greeting())
 
