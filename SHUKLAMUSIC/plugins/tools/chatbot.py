@@ -11,7 +11,7 @@ import random
 # ─── CONFIG ──────────────────────────────────────────
 BOT_USERNAME = getenv("BOT_USERNAME", "").lower()
 BOT_NAME = "sivix"
-OWNER_USERNAME = "@Sivixmusicbot"
+OWNER_USERNAME = "@rarest1"
 
 groq = Groq(api_key=getenv("GROQ_API_KEY"))
 
