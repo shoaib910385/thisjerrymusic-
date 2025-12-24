@@ -60,7 +60,6 @@ def stream_markup_timer(_, chat_id, played, dur):
         ],
         
      [
-            InlineKeyboardButton("˹ᴘʀιᴠᴧᴄʏ˼", url=f"https://telegra.ph/Privacy-Policy-08-03-101"),
             InlineKeyboardButton("˹ᴏᴡηєʀ˼♪", url=f"http://t.me/rarest1"),
         ],
 
@@ -78,7 +77,6 @@ def stream_markup(_, chat_id):
             InlineKeyboardButton(text=" ˹ϻʏ ʜᴏϻє˼ ", url="https://t.me/Sivixsupportgc",),
         ],
         [
-            InlineKeyboardButton("˹ᴘʀιᴠᴧᴄʏ˼", url=f"https://telegra.ph/Privacy-Policy-08-03-101"),
             InlineKeyboardButton("˹ᴏᴡηєʀ˼♪", url=f"http://t.me/rarest1"),
         ],
        
