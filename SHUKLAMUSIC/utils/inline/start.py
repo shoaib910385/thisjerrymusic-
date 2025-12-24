@@ -11,9 +11,7 @@ def start_panel(_):
             ),
             InlineKeyboardButton(text=_["S_B_2"], url=config.SUPPORT_CHAT),
         ],
-        [
-            InlineKeyboardButton("˹ᴘσʟιᴄʏ˼", url=f"https://telegra.ph/Privacy-Policy-08-03-101"),
-        ],
+        
     ]
     return buttons
 
@@ -31,8 +29,7 @@ def private_panel(_):
             InlineKeyboardButton(text=_["S_B_2"], url=config.SUPPORT_CHAT),
         ],
         [
-            InlineKeyboardButton(text=_["S_B_4"], callback_data="settings_back_helper"),
-            InlineKeyboardButton("˹ᴘσʟιᴄʏ˼", url=f"https://telegra.ph/Privacy-Policy-08-03-101"),
+            InlineKeyboardButton(text=_["S_B_4"], callback_data="settings_back_helper")
         ],
         [
             InlineKeyboardButton(text=_["S_B_5"], user_id=config.OWNER_ID),
