@@ -100,7 +100,7 @@ def dm_greeting(text: str) -> bool:
 def group_trigger(message: Message) -> bool:
     text = (message.text or "").lower()
     return (
-        f"@{BOT_USERNAME}" in text
+        f"{BOT_USERNAME}" in text
         or name_trigger(text)
         or (
             message.reply_to_message
