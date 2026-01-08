@@ -146,7 +146,7 @@ async def sivix_chat(bot, message: Message):
         return
 
     clean_text = (
-        text.replace(f"@{BOT_USERNAME}", "")
+        text.replace(f"{BOT_USERNAME}", "")
             .replace(BOT_NAME, "")
             .strip()
     )
