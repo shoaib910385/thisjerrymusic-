@@ -100,7 +100,7 @@ def dm_greeting(text: str) -> bool:
 def group_trigger(message: Message) -> bool:
     text = (message.text or "").lower()
     return (
-        f"{BOT_USERNAME}" in text
+        f"@Sivixmusicbot" in text
         or name_trigger(text)
         or (
             message.reply_to_message
@@ -146,7 +146,7 @@ async def sivix_chat(bot, message: Message):
         return
 
     clean_text = (
-        text.replace(f"{BOT_USERNAME}", "")
+        text.replace(f"@Sivixmusicbot")
             .replace(BOT_NAME, "")
             .strip()
     )
