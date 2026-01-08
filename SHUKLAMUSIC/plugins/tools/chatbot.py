@@ -9,7 +9,7 @@ from datetime import datetime
 import random
 
 # ─── CONFIG ──────────────────────────────────────────
-BOT_USERNAME = getenv("BOT_USERNAME", "").lower()
+BOT_USERNAME = "@Sivixmusicbot"
 BOT_NAME = "sivix"
 OWNER_USERNAME = "@rarest1"
 
@@ -100,7 +100,7 @@ def dm_greeting(text: str) -> bool:
 def group_trigger(message: Message) -> bool:
     text = (message.text or "").lower()
     return (
-        f"@Sivixmusicbot" in text
+        f"{BOT_USERNAME}" in text
         or name_trigger(text)
         or (
             message.reply_to_message
@@ -146,7 +146,7 @@ async def sivix_chat(bot, message: Message):
         return
 
     clean_text = (
-        text.replace(f"@Sivixmusicbot","")
+        text.replace(f"{BOT_USERNAME}","")
             .replace(BOT_NAME, "")
             .strip()
     )
